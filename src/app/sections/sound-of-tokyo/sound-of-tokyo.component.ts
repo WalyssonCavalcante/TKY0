@@ -33,6 +33,7 @@ export class SoundOfTokyoComponent implements OnDestroy {
   private activeSamples = new Map<string, { source: AudioBufferSourceNode; gain: GainNode }>();
   private audioBufferCache = new Map<string, AudioBuffer>();
   private scrollTriggers: globalThis.ScrollTrigger[] = [];
+  isMobile = false;
 
   sectionEl = viewChild.required<ElementRef<HTMLElement>>('sectionEl');
   cardEls = viewChildren<ElementRef<HTMLElement>>('cardEl');
@@ -91,7 +92,10 @@ export class SoundOfTokyoComponent implements OnDestroy {
   ];
 
   constructor() {
-    afterNextRender(() => this.initScrollAnimations());
+    afterNextRender(() => {
+      this.isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      this.initScrollAnimations();
+    });
   }
 
   private initScrollAnimations(): void {
@@ -122,6 +126,27 @@ export class SoundOfTokyoComponent implements OnDestroy {
   onCardLeave(sound: SoundCard): void {
     this.activeCard.set(null);
     this.stopTone(sound.id);
+  }
+
+  onCardTap(event: Event, sound: SoundCard): void {
+    event.preventDefault();
+
+    // Toggle: tap again to stop
+    if (this.activeCard() === sound.id) {
+      this.activeCard.set(null);
+      this.stopTone(sound.id);
+      return;
+    }
+
+    // Stop any previous sound
+    const prev = this.activeCard();
+    if (prev) this.stopTone(prev);
+
+    // iOS Safari requires AudioContext creation/resume inside a user gesture
+    this.ensureContext();
+
+    this.activeCard.set(sound.id);
+    this.playTone(sound);
   }
 
   private ensureContext(): AudioContext {

@@ -4,7 +4,7 @@
       <p class="label">Experiência sonora</p>
       <h2 class="sounds__title">Os sons<br />de Tokyo</h2>
     </div>
-    <p class="sounds__hint">Passe o mouse para ouvir</p>
+    <p class="sounds__hint">{{ isMobile ? 'Toque para ouvir' : 'Passe o mouse para ouvir' }}</p>
   </header>
 
   <div class="sounds__grid">
@@ -15,6 +15,7 @@
         #cardEl
         (mouseenter)="onCardEnter(sound)"
         (mouseleave)="onCardLeave(sound)"
+        (touchstart)="onCardTap($event, sound)"
         (focusin)="onCardEnter(sound)"
         (focusout)="onCardLeave(sound)"
         tabindex="0"
