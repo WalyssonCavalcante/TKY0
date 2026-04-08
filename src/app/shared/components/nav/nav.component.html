@@ -1,0 +1,53 @@
+<nav class="nav" [class.nav--solid]="isSolid()">
+  <a class="nav__brand" href="#" (click)="scrollTo($event, 'top')">
+    <span class="nav__logo">見え隠れ</span>
+    <span class="nav__sub">MIEGAKURE</span>
+  </a>
+  <ul class="nav__links">
+    @for (link of links; track link.label) {
+      <li>
+        <a class="nav__a" [href]="link.href" (click)="scrollTo($event, link.href)">{{ link.label }}</a>
+      </li>
+    }
+  </ul>
+
+  <button
+    class="nav__burger"
+    [class.nav__burger--open]="menuOpen()"
+    [attr.aria-expanded]="menuOpen()"
+    (click)="toggleMenu()"
+    aria-label="Alternar menu"
+  >
+    <span class="nav__burger-line"></span>
+    <span class="nav__burger-line"></span>
+  </button>
+
+  @if (weatherService.weather(); as w) {
+    <span class="nav__tag">
+      <app-weather-icon [icon]="w.icon" />
+      TKY · {{ w.temp }}°C
+    </span>
+  } @else {
+    <span class="nav__tag">TKY · 35°N</span>
+  }
+</nav>
+
+@if (menuOpen()) {
+  <div class="nav-overlay" #overlay>
+    <ul class="nav-overlay__links">
+      @for (link of links; track link.label; let i = $index) {
+        <li class="nav-overlay__item" #overlayItem>
+          <a
+            class="nav-overlay__a"
+            [href]="link.href"
+            (click)="scrollTo($event, link.href)"
+          >{{ link.label }}</a>
+        </li>
+      }
+    </ul>
+    <div class="nav-overlay__footer">
+      <span class="nav-overlay__kanji">見え隠れ</span>
+      <span class="nav-overlay__coord">35.6762° N · 139.6503° E</span>
+    </div>
+  </div>
+}

@@ -1,0 +1,45 @@
+<section class="districts" id="districts">
+  <header class="districts__header">
+    <p class="label">Distritos</p>
+    <h2 class="districts__heading">
+      Três faces<br />da metrópole
+    </h2>
+  </header>
+
+  @for (d of districts; track d.num) {
+    <div
+      class="district"
+      [class.district--reverse]="d.reverse"
+      #districtRow
+    >
+      <div class="district__media">
+        <div class="district__img-wrap">
+          <img
+            [ngSrc]="d.img"
+            [alt]="d.name + ' — ' + d.kanji"
+            class="district__img"
+            appParallaxImg
+            [speed]="8"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
+      </div>
+      <div class="district__text">
+        <span class="district__num">{{ d.num }}</span>
+        <div class="district__name-block">
+          <h3 class="district__name">{{ d.name }}</h3>
+          <span class="district__kanji">{{ d.kanji }}</span>
+        </div>
+        <p class="district__body">{{ d.body }}</p>
+        <div class="district__stat">
+          <span class="district__stat-value"
+            >{{ d.statValue
+            }}<span class="district__stat-unit">{{ d.statUnit }}</span></span
+          >
+          <span class="district__stat-label">{{ d.statLabel }}</span>
+        </div>
+      </div>
+    </div>
+  }
+</section>

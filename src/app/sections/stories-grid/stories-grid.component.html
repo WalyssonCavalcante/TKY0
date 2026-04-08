@@ -1,0 +1,42 @@
+<section class="stories" id="stories">
+  <header class="stories__header">
+    <div>
+      <p class="label">Territórios</p>
+      <h2 class="stories__title">Cinco mundos<br />dentro de uma cidade</h2>
+    </div>
+    <p class="stories__hint">Passe o mouse para explorar</p>
+  </header>
+
+  <div class="stories__grid">
+    @for (story of stories; track story.idx) {
+      <article
+        class="card"
+        [class]="'card card--' + story.size"
+        #storyCard
+        (mousemove)="onCardMouseMove($event)"
+        (mouseleave)="onCardMouseLeave($event)"
+      >
+        <div class="card__media">
+          <img
+            [ngSrc]="story.img"
+            [alt]="story.name + ' — ' + story.nameJp"
+            class="card__img"
+            fill
+            [sizes]="story.sizes"
+          />
+          <div class="card__tint"></div>
+          <div class="card__overlay"></div>
+        </div>
+        <div class="card__content">
+          <span class="card__idx">{{ story.idx }}</span>
+          <div>
+            <h3 class="card__name">{{ story.name }}</h3>
+            <p class="card__jp">{{ story.nameJp }}</p>
+          </div>
+          <p class="card__desc">{{ story.desc }}</p>
+        </div>
+        <div class="card__arrow" aria-hidden="true">↗</div>
+      </article>
+    }
+  </div>
+</section>

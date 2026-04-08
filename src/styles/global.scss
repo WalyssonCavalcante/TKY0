@@ -1,0 +1,62 @@
+@use 'tokens';
+@use 'reset';
+
+// Scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 149, 106, 0.4);
+  border-radius: 3px;
+
+  &:hover {
+    background: rgba(212, 149, 106, 0.7);
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 149, 106, 0.4) var(--color-bg);
+}
+
+// Focus visible
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.label {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.line-mask {
+  display: block;
+  overflow-x: visible;
+  overflow-y: clip;
+}
+
+.line-inner {
+  display: block;
+  transform: translateY(110%);
+}

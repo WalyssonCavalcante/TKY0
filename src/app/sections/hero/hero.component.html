@@ -1,0 +1,46 @@
+<section class="hero" #heroSection>
+  <canvas class="hero__canvas" #threeCanvas></canvas>
+
+  <div class="hero__bg" #heroBg>
+    <img
+      ngSrc="hero-skyline.webp"
+      alt="Horizonte de Tokyo à noite"
+      class="hero__img"
+      fill
+      priority
+      sizes="100vw"
+    />
+    <div class="hero__overlay"></div>
+  </div>
+
+  <div class="hero__scanlines" aria-hidden="true"></div>
+
+  <div class="hero__coords" aria-hidden="true">
+    35.6762° N · 139.6503° E
+  </div>
+
+  <div class="hero__content">
+    <p class="hero__eyebrow" #eyebrow>
+      <span class="hero__eyebrow-line"></span>
+      地域共創のコトづくり
+    </p>
+    <h1 class="hero__title" aria-label="DESCUBRA TOKYO">
+      <span class="line-mask">
+        <span class="line-inner hero__line hero__line--accent" #line1>DESCUBRA</span>
+      </span>
+      <span class="line-mask">
+        <span class="line-inner hero__line" #line2>TOKYO</span>
+      </span>
+    </h1>
+    <p class="hero__sub" #heroSub>
+      Onde o ritual ancestral e o futuro elétrico dividem o mesmo fôlego.
+    </p>
+  </div>
+
+  <div class="hero__kanji-deco" aria-hidden="true">東京</div>
+
+  <div class="hero__scroll" #scrollIndicator aria-hidden="true">
+    <span class="hero__scroll-text">Rolar</span>
+    <span class="hero__scroll-line"></span>
+  </div>
+</section>

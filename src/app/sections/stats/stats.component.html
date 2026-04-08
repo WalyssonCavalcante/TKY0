@@ -1,0 +1,12 @@
+<section class="stats" id="culture">
+  <div class="stats__grid">
+    @for (stat of stats; track stat.label) {
+      <div class="stats__item" #statItem>
+        <span class="stats__value" #statValue>0</span>
+        <span class="stats__suffix">{{ stat.suffix }}</span>
+        <span class="stats__label">{{ stat.label }}</span>
+        <span class="stats__sub">{{ stat.sub }}</span>
+      </div>
+    }
+  </div>
+</section>

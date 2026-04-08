@@ -1,0 +1,95 @@
+.footer {
+  position: relative;
+  padding: clamp(80px, 12vw, 180px) clamp(24px, 5vw, 80px)
+    clamp(32px, 4vw, 48px);
+  background: var(--color-bg);
+  overflow: hidden;
+
+  &__kanji {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-display);
+    font-size: clamp(180px, 30vw, 400px);
+    font-weight: 700;
+    color: rgba(236, 234, 229, 0.025);
+    pointer-events: none;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  &__top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: clamp(64px, 10vw, 140px);
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 32px;
+    }
+  }
+
+  &__tagline {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 5vw, 64px);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    will-change: transform, opacity;
+
+    em {
+      color: var(--color-accent);
+      font-style: italic;
+    }
+  }
+
+  &__address {
+    font-style: normal;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--color-muted);
+    line-height: 2;
+    text-align: right;
+    text-transform: uppercase;
+
+    @media (max-width: 768px) {
+      text-align: left;
+    }
+  }
+
+  &__bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 24px;
+    border-top: 0.5px solid var(--color-faint);
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+  }
+
+  &__copy {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: rgba(236, 234, 229, 0.25);
+    text-transform: uppercase;
+  }
+
+  &__jp {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: rgba(212, 149, 106, 0.25);
+  }
+}

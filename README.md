@@ -1,59 +1,52 @@
-# Tkyo
+# MIEGAKURE — 見え隠れ
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+> Uma experiência editorial imersiva sobre Tokyo, onde o ritual ancestral e o futuro elétrico dividem o mesmo fôlego.
 
-## Development server
+![Preview do projeto](screenshot.png)
 
-To start a local development server, run:
+## Sobre
+
+MIEGAKURE (見え隠れ) é uma landing page temática sobre Tokyo construída com Angular 21. O projeto explora a dualidade entre tradição e modernidade da capital japonesa através de seções visuais ricas, animações cinematográficas e uma estética editorial escura inspirada em revistas de viagem premium.
+
+## Funcionalidades
+
+- **Hero imersivo** com partículas Three.js e parallax
+- **Manifesto horizontal** com scroll pinado via GSAP + ScrollTrigger
+- **Grid de histórias** com hover parallax nos cards
+- **Distritos** com layout alternado e imagens parallax
+- **Clima ao vivo** de Tokyo via Open-Meteo API (navbar)
+- **Smooth scroll** via Lenis
+- **Preloader** animado com contagem
+- **Barra de progresso** de scroll
+- **Totalmente responsivo** — mobile-first com breakpoints adaptáveis
+- **Acessível** — skip-nav, aria-labels, focus-visible, `prefers-reduced-motion`
+- **Performance** — NgOptimizedImage, imagens WebP, `@defer` com prefetch, zoneless change detection
+
+## Tech Stack
+
+- **Angular 21** — Zoneless, OnPush, Signals
+- **Three.js** — Sistema de partículas no hero
+- **GSAP + ScrollTrigger** — Animações e scroll horizontal
+- **Lenis** — Smooth scrolling
+- **Open-Meteo API** — Clima de Tokyo em tempo real
+- **SCSS** — Tokens, design system customizado
+
+## Começando
 
 ```bash
+# Instalar dependências
+npm install
+
+# Servidor de desenvolvimento
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Acesse `http://localhost:4200/`
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Build
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Artifacts em `dist/tkyo/`.

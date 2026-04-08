@@ -1,0 +1,18 @@
+<section class="manifesto" #manifestoSection id="philosophy">
+  <div class="manifesto__track" #track>
+    @for (panel of panels; track panel.num) {
+      <div class="manifesto__panel">
+        <span class="manifesto__num" aria-hidden="true">{{ panel.num }}</span>
+        <div class="manifesto__kanji" aria-hidden="true">{{ panel.kanji }}</div>
+        <blockquote class="manifesto__quote">{{ panel.quote }}</blockquote>
+        <p class="manifesto__desc">{{ panel.desc }}</p>
+      </div>
+    }
+  </div>
+  <div class="manifesto__progress">
+    <div class="manifesto__progress-fill" #progressFill></div>
+  </div>
+  <div class="manifesto__counter" #panelCounter aria-live="polite">
+    01 / 04
+  </div>
+</section>
