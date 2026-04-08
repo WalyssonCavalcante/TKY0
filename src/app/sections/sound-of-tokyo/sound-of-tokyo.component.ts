@@ -54,7 +54,7 @@ export class SoundOfTokyoComponent implements OnDestroy {
       labelJp: '東京メトロ',
       description: 'O pulso subterrâneo da cidade — portas que abrem entre dois mundos.',
       icon: '駅',
-      file: 'tokyo-subway.wav',
+      file: 'tokyo-subway.mp3',
     },
     {
       id: 'ginza',
@@ -70,7 +70,7 @@ export class SoundOfTokyoComponent implements OnDestroy {
       labelJp: '寺院の鐘',
       description: 'A ressonância grave que suspende o tempo entre duas respirações.',
       icon: '鐘',
-      file: 'bell-temple.wav',
+      file: 'bell-temple.mp3',
     },
     {
       id: 'rain',
@@ -78,7 +78,7 @@ export class SoundOfTokyoComponent implements OnDestroy {
       labelJp: '谷中の雨',
       description: 'Gotas sobre telhas de barro — o som que Tokyo não consegue apagar.',
       icon: '雨',
-      file: 'urban-rain-tokyo.wav',
+      file: 'urban-rain-tokyo.mp3',
     },
     {
       id: 'train',
@@ -86,7 +86,7 @@ export class SoundOfTokyoComponent implements OnDestroy {
       labelJp: '山手線の旋律',
       description: 'Cada estação, uma assinatura sonora no circuito infinito.',
       icon: '環',
-      file:'yamanote-line.wav'
+      file:'yamanote-line.mp3'
     },
   ];
 
