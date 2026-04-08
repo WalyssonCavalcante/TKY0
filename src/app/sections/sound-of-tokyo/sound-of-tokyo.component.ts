@@ -151,12 +151,25 @@ export class SoundOfTokyoComponent implements OnDestroy {
 
   private ensureContext(): AudioContext {
     if (!this.audioCtx) {
-      this.audioCtx = new AudioContext();
+      this.audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
     if (this.audioCtx.state === 'suspended') {
       this.audioCtx.resume();
     }
+    // iOS Safari requires a sound to be played synchronously within the user
+    // gesture callstack to truly unlock the AudioContext. We play a tiny
+    // silent buffer so that any subsequent async playback (fetch + decode)
+    // works without being blocked.
+    this.playUnlockBuffer(this.audioCtx);
     return this.audioCtx;
+  }
+
+  private playUnlockBuffer(ctx: AudioContext): void {
+    const buf = ctx.createBuffer(1, 1, ctx.sampleRate);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
   }
 
   private playTone(sound: SoundCard): void {
@@ -208,13 +221,24 @@ export class SoundOfTokyoComponent implements OnDestroy {
     if (!buffer) {
       const response = await fetch(sound.file!);
       const arrayBuffer = await response.arrayBuffer();
-      buffer = await ctx.decodeAudioData(arrayBuffer);
+      buffer = await new Promise<AudioBuffer>((resolve, reject) =>
+        ctx.decodeAudioData(arrayBuffer, resolve, reject)
+      );
       this.audioBufferCache.set(sound.file!, buffer);
     }
 
+    // Guard: user may have tapped another card while loading
+    if (this.activeCard() !== sound.id) return;
+
     const source = ctx.createBufferSource();
     source.buffer = buffer;
-    source.loop = true;
+
+    source.onended = () => {
+      this.activeSamples.delete(sound.id);
+      if (this.activeCard() === sound.id) {
+        this.activeCard.set(null);
+      }
+    };
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0, ctx.currentTime);
@@ -222,7 +246,7 @@ export class SoundOfTokyoComponent implements OnDestroy {
 
     source.connect(gain);
     gain.connect(ctx.destination);
-    source.start();
+    source.start(0);
 
     this.activeSamples.set(sound.id, { source, gain });
   }
