@@ -1,0 +1,36 @@
+@if (weather(); as w) {
+  <aside class="live" aria-label="Dados ao vivo de Tokyo">
+    <p class="live__label">Live Data · 東京</p>
+
+    <div class="live__grid">
+      <div class="live__item">
+        <span class="live__value">
+          <app-weather-icon [icon]="w.icon" />
+          {{ w.temp }}°C
+        </span>
+        <span class="live__key">Temperatura</span>
+      </div>
+
+      <div class="live__item">
+        <span class="live__value">{{ w.humidity }}%</span>
+        <span class="live__key">Umidade</span>
+      </div>
+
+      <div class="live__item">
+        <span class="live__value">{{ w.windSpeed }} km/h</span>
+        <span class="live__key">Vento</span>
+      </div>
+
+      <div class="live__item live__item--fuji">
+        <span class="live__value" [class.live__value--visible]="w.fujiVisible">
+          <svg class="live__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+            <path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"/>
+          </svg>
+          {{ fujiStatus() }}
+        </span>
+        <span class="live__key">Monte Fuji</span>
+      </div>
+    </div>
+  </aside>
+}

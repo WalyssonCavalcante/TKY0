@@ -7,10 +7,12 @@ import {
 } from '@angular/core';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { LiveDataComponent } from '../../shared/components/live-data/live-data.component';
 
 @Component({
   selector: 'app-footer',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LiveDataComponent],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',
 })
