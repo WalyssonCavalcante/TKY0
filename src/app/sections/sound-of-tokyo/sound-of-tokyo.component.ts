@@ -164,22 +164,32 @@ export class SoundOfTokyoComponent implements OnDestroy {
     if (!audio) return;
 
     audio.currentTime = 0;
-    audio.volume = 0;
-    audio.play().then(() => {
-      this.fadeVolume(audio, 0, 0.6, 400);
-    }).catch(() => {
-      // Playback blocked — silently ignore
-    });
+
+    // iOS Safari ignores programmatic volume changes — play at full volume directly
+    if (this.isMobile) {
+      audio.play().catch(() => {});
+    } else {
+      audio.volume = 0;
+      audio.play().then(() => {
+        this.fadeVolume(audio, 0, 0.6, 400);
+      }).catch(() => {});
+    }
   }
 
   private stopSound(id: string): void {
     const audio = this.audioElements.get(id);
     if (!audio || audio.paused) return;
 
-    this.fadeVolume(audio, audio.volume, 0, 300, () => {
+    if (this.isMobile) {
       audio.pause();
       audio.currentTime = 0;
-    });
+    } else {
+      this.fadeVolume(audio, audio.volume, 0, 300, () => {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.volume = 0.6;
+      });
+    }
   }
 
   /** Smooth volume fade using requestAnimationFrame */
