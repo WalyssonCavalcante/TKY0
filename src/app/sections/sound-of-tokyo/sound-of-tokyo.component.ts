@@ -17,8 +17,7 @@ interface SoundCard {
   labelJp: string;
   description: string;
   icon: string;
-  frequency?: number;
-  file?: string;
+  file: string;
 }
 
 @Component({
@@ -28,10 +27,7 @@ interface SoundCard {
   styleUrl: './sound-of-tokyo.component.scss',
 })
 export class SoundOfTokyoComponent implements OnDestroy {
-  private audioCtx: AudioContext | null = null;
-  private activeOscillators = new Map<string, { osc: OscillatorNode; gain: GainNode }>();
-  private activeSamples = new Map<string, { source: AudioBufferSourceNode; gain: GainNode }>();
-  private audioBufferCache = new Map<string, AudioBuffer>();
+  private audioElements = new Map<string, HTMLAudioElement>();
   private scrollTriggers: globalThis.ScrollTrigger[] = [];
   isMobile = false;
 
@@ -94,8 +90,25 @@ export class SoundOfTokyoComponent implements OnDestroy {
   constructor() {
     afterNextRender(() => {
       this.isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      this.preloadAudioElements();
       this.initScrollAnimations();
     });
+  }
+
+  /** Pre-create Audio elements so they're ready to play instantly */
+  private preloadAudioElements(): void {
+    for (const sound of this.sounds) {
+      if (!sound.file) continue;
+      const audio = new Audio(sound.file);
+      audio.preload = 'auto';
+      audio.volume = 0;
+      audio.addEventListener('ended', () => {
+        if (this.activeCard() === sound.id) {
+          this.activeCard.set(null);
+        }
+      });
+      this.audioElements.set(sound.id, audio);
+    }
   }
 
   private initScrollAnimations(): void {
@@ -120,12 +133,12 @@ export class SoundOfTokyoComponent implements OnDestroy {
 
   onCardEnter(sound: SoundCard): void {
     this.activeCard.set(sound.id);
-    this.playTone(sound);
+    this.playSound(sound);
   }
 
   onCardLeave(sound: SoundCard): void {
     this.activeCard.set(null);
-    this.stopTone(sound.id);
+    this.stopSound(sound.id);
   }
 
   onCardTap(event: Event, sound: SoundCard): void {
@@ -134,161 +147,69 @@ export class SoundOfTokyoComponent implements OnDestroy {
     // Toggle: tap again to stop
     if (this.activeCard() === sound.id) {
       this.activeCard.set(null);
-      this.stopTone(sound.id);
+      this.stopSound(sound.id);
       return;
     }
 
     // Stop any previous sound
     const prev = this.activeCard();
-    if (prev) this.stopTone(prev);
-
-    // iOS Safari requires AudioContext creation/resume inside a user gesture
-    this.ensureContext();
+    if (prev) this.stopSound(prev);
 
     this.activeCard.set(sound.id);
-    this.playTone(sound);
+    this.playSound(sound);
   }
 
-  private ensureContext(): AudioContext {
-    if (!this.audioCtx) {
-      this.audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    }
-    if (this.audioCtx.state === 'suspended') {
-      this.audioCtx.resume();
-    }
-    // iOS Safari requires a sound to be played synchronously within the user
-    // gesture callstack to truly unlock the AudioContext. We play a tiny
-    // silent buffer so that any subsequent async playback (fetch + decode)
-    // works without being blocked.
-    this.playUnlockBuffer(this.audioCtx);
-    return this.audioCtx;
+  private playSound(sound: SoundCard): void {
+    const audio = this.audioElements.get(sound.id);
+    if (!audio) return;
+
+    audio.currentTime = 0;
+    audio.volume = 0;
+    audio.play().then(() => {
+      this.fadeVolume(audio, 0, 0.6, 400);
+    }).catch(() => {
+      // Playback blocked — silently ignore
+    });
   }
 
-  private playUnlockBuffer(ctx: AudioContext): void {
-    const buf = ctx.createBuffer(1, 1, ctx.sampleRate);
-    const src = ctx.createBufferSource();
-    src.buffer = buf;
-    src.connect(ctx.destination);
-    src.start(0);
+  private stopSound(id: string): void {
+    const audio = this.audioElements.get(id);
+    if (!audio || audio.paused) return;
+
+    this.fadeVolume(audio, audio.volume, 0, 300, () => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
   }
 
-  private playTone(sound: SoundCard): void {
-    if (sound.file) {
-      this.playSample(sound);
-      return;
-    }
-    if (this.activeOscillators.has(sound.id)) return;
-
-    const ctx = this.ensureContext();
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(sound.frequency!, ctx.currentTime);
-
-    // Subtle detuned second oscillator for binaural depth
-    const osc2 = ctx.createOscillator();
-    const gain2 = ctx.createGain();
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(sound.frequency! + 4, ctx.currentTime); // 4Hz binaural beat
-
-    gain.gain.setValueAtTime(0, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.6);
-
-    gain2.gain.setValueAtTime(0, ctx.currentTime);
-    gain2.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.6);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc2.connect(gain2);
-    gain2.connect(ctx.destination);
-
-    osc.start();
-    osc2.start();
-
-    this.activeOscillators.set(sound.id, { osc, gain });
-    this.activeOscillators.set(sound.id + '_b', { osc: osc2, gain: gain2 });
-  }
-
-  private async playSample(sound: SoundCard): Promise<void> {
-    if (this.activeSamples.has(sound.id)) return;
-
-    const ctx = this.ensureContext();
-    let buffer = this.audioBufferCache.get(sound.file!);
-
-    if (!buffer) {
-      const response = await fetch(sound.file!);
-      const arrayBuffer = await response.arrayBuffer();
-      buffer = await new Promise<AudioBuffer>((resolve, reject) =>
-        ctx.decodeAudioData(arrayBuffer, resolve, reject)
-      );
-      this.audioBufferCache.set(sound.file!, buffer);
-    }
-
-    // Guard: user may have tapped another card while loading
-    if (this.activeCard() !== sound.id) return;
-
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-
-    source.onended = () => {
-      this.activeSamples.delete(sound.id);
-      if (this.activeCard() === sound.id) {
-        this.activeCard.set(null);
+  /** Smooth volume fade using requestAnimationFrame */
+  private fadeVolume(
+    audio: HTMLAudioElement,
+    from: number,
+    to: number,
+    durationMs: number,
+    onDone?: () => void
+  ): void {
+    const start = performance.now();
+    const step = (now: number) => {
+      const elapsed = now - start;
+      const t = Math.min(elapsed / durationMs, 1);
+      audio.volume = from + (to - from) * t;
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        onDone?.();
       }
     };
-
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + 0.6);
-
-    source.connect(gain);
-    gain.connect(ctx.destination);
-    source.start(0);
-
-    this.activeSamples.set(sound.id, { source, gain });
-  }
-
-  private stopTone(id: string): void {
-    // Stop sample-based audio
-    const sample = this.activeSamples.get(id);
-    if (sample) {
-      const ctx = this.audioCtx!;
-      sample.gain.gain.cancelScheduledValues(ctx.currentTime);
-      sample.gain.gain.setValueAtTime(sample.gain.gain.value, ctx.currentTime);
-      sample.gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
-      sample.source.stop(ctx.currentTime + 0.5);
-      this.activeSamples.delete(id);
-      return;
-    }
-
-    // Stop oscillator-based audio
-    [id, id + '_b'].forEach((key) => {
-      const entry = this.activeOscillators.get(key);
-      if (!entry) return;
-
-      const { osc, gain } = entry;
-      const ctx = this.audioCtx!;
-      gain.gain.cancelScheduledValues(ctx.currentTime);
-      gain.gain.setValueAtTime(gain.gain.value, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
-      osc.stop(ctx.currentTime + 0.5);
-      this.activeOscillators.delete(key);
-    });
+    requestAnimationFrame(step);
   }
 
   ngOnDestroy(): void {
-    this.activeSamples.forEach(({ source }) => {
-      try { source.stop(); } catch { /* already stopped */ }
+    this.audioElements.forEach((audio) => {
+      audio.pause();
+      audio.src = '';
     });
-    this.activeSamples.clear();
-    this.activeOscillators.forEach(({ osc }) => {
-      try { osc.stop(); } catch { /* already stopped */ }
-    });
-    this.activeOscillators.clear();
-    this.audioCtx?.close();
+    this.audioElements.clear();
     this.scrollTriggers.forEach((st) => st.kill());
   }
 }
