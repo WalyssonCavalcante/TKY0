@@ -28,6 +28,7 @@ export class NavComponent {
   links = [
     { label: 'Filosofia', href: '#philosophy' },
     { label: 'Histórias', href: '#stories' },
+    { label: 'Sons', href: '#sounds' },
     { label: 'Distritos', href: '#districts' },
     { label: 'Cultura', href: '#culture' },
   ];

@@ -24,6 +24,12 @@
   }
 
   @defer (on viewport; prefetch on idle) {
+    <app-sound-of-tokyo />
+  } @placeholder {
+    <div style="min-height: 60vh;"></div>
+  }
+
+  @defer (on viewport; prefetch on idle) {
     <app-districts />
   } @placeholder {
     <div style="min-height: 80vh;"></div>

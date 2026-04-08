@@ -1,0 +1,45 @@
+<section class="sounds" id="sounds" #sectionEl>
+  <header class="sounds__header">
+    <div>
+      <p class="label">Experiência sonora</p>
+      <h2 class="sounds__title">Os sons<br />de Tokyo</h2>
+    </div>
+    <p class="sounds__hint">Passe o mouse para ouvir</p>
+  </header>
+
+  <div class="sounds__grid">
+    @for (sound of sounds; track sound.id) {
+      <article
+        class="sound-card"
+        [class.sound-card--active]="activeCard() === sound.id"
+        #cardEl
+        (mouseenter)="onCardEnter(sound)"
+        (mouseleave)="onCardLeave(sound)"
+        (focusin)="onCardEnter(sound)"
+        (focusout)="onCardLeave(sound)"
+        tabindex="0"
+        [attr.aria-label]="sound.label + ' — ' + sound.description"
+      >
+        <span class="sound-card__kanji" aria-hidden="true">{{ sound.icon }}</span>
+
+        <div class="sound-card__pulse" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="sound-card__content">
+          <h3 class="sound-card__label">{{ sound.label }}</h3>
+          <p class="sound-card__jp">{{ sound.labelJp }}</p>
+          <p class="sound-card__desc">{{ sound.description }}</p>
+        </div>
+
+        <div class="sound-card__wave" aria-hidden="true">
+          <svg viewBox="0 0 120 24" preserveAspectRatio="none">
+            <path d="M0 12 Q10 4, 20 12 T40 12 T60 12 T80 12 T100 12 T120 12" fill="none" stroke="currentColor" stroke-width="1" />
+          </svg>
+        </div>
+      </article>
+    }
+  </div>
+</section>

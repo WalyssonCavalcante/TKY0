@@ -13,6 +13,7 @@ import { ManifestoComponent } from './sections/manifesto/manifesto.component';
 import { StoriesGridComponent } from './sections/stories-grid/stories-grid.component';
 import { DistrictsComponent } from './sections/districts/districts.component';
 import { StatsComponent } from './sections/stats/stats.component';
+import { SoundOfTokyoComponent } from './sections/sound-of-tokyo/sound-of-tokyo.component';
 import { FooterComponent } from './sections/footer/footer.component';
 import { NoiseOverlayComponent } from './shared/components/noise-overlay/noise-overlay.component';
 import { ScrollProgressComponent } from './shared/components/scroll-progress/scroll-progress.component';
@@ -26,6 +27,7 @@ import { ScrollProgressComponent } from './shared/components/scroll-progress/scr
     HeroComponent,
     ManifestoComponent,
     StoriesGridComponent,
+    SoundOfTokyoComponent,
     DistrictsComponent,
     StatsComponent,
     FooterComponent,
