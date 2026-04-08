@@ -75,6 +75,7 @@
     text-orientation: mixed;
     transform: rotate(180deg) translateY(50%);
     z-index: 4;
+    user-select: none;
 
     @media (max-width: 768px) {
       display: none;
@@ -86,6 +87,7 @@
     z-index: 4;
     padding: 0 clamp(24px, 5vw, 80px) clamp(56px, 8vw, 120px);
     max-width: 1000px;
+    user-select: none;
   }
 
   &__eyebrow {
