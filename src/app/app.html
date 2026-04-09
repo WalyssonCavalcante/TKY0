@@ -36,6 +36,18 @@
   }
 
   @defer (on viewport; prefetch on idle) {
+    <app-map-spread />
+  } @placeholder {
+    <div style="min-height: 80vh;"></div>
+  }
+
+  @defer (on viewport; prefetch on idle) {
+    <app-hidden-alleys />
+  } @placeholder {
+    <div style="min-height: 80vh;"></div>
+  }
+
+  @defer (on viewport; prefetch on idle) {
     <app-stats />
   } @placeholder {
     <div style="min-height: 40vh;"></div>

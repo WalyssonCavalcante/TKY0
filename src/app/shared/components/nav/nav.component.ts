@@ -30,6 +30,7 @@ export class NavComponent {
     { label: 'Histórias', href: '#stories' },
     { label: 'Sons', href: '#sounds' },
     { label: 'Distritos', href: '#districts' },
+    { label: 'Becos', href: '#alleys' },
     { label: 'Cultura', href: '#culture' },
   ];
 

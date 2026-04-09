@@ -1,0 +1,330 @@
+@keyframes map-pulse {
+  0%   { r: 7;  opacity: 0.7; }
+  100% { r: 22; opacity: 0;   }
+}
+
+@keyframes legend-pulse {
+  0%   { transform: scale(1);   opacity: 0.75; }
+  100% { transform: scale(3.5); opacity: 0;    }
+}
+
+// ─── Section layout ────────────────────────────────────
+
+.map-spread {
+  position: relative;
+  background: var(--color-bg);
+  padding: var(--gap-section) clamp(24px, 5vw, 80px) calc(var(--gap-section) * 0.75);
+  border-top: 0.5px solid var(--color-faint);
+  overflow: hidden;
+}
+
+// ─── Header ────────────────────────────────────────────
+
+.map-spread__header {
+  margin-bottom: clamp(32px, 5vw, 64px);
+}
+
+.map-spread__heading {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4.5vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-top: 10px;
+}
+
+// ─── SVG canvas ────────────────────────────────────────
+
+.map-spread__canvas {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  border: 0.5px solid var(--color-faint);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.map-spread__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  cursor: none;
+}
+
+// ─── SVG elements ──────────────────────────────────────
+
+// Decorative grid
+.map__grid {
+  stroke: rgba(236, 234, 229, 0.04);
+  stroke-width: 0.5;
+}
+
+// Tokyo Bay fill
+.map__bay {
+  fill: rgba(212, 149, 106, 0.04);
+  stroke: none;
+}
+
+// Landmark parks & green spaces
+.map__park {
+  fill: rgba(212, 149, 106, 0.035);
+  stroke: rgba(212, 149, 106, 0.1);
+  stroke-width: 0.4;
+}
+
+// Imperial Palace moat
+.map__moat {
+  fill: none;
+  stroke: rgba(212, 149, 106, 0.12);
+  stroke-width: 0.6;
+  stroke-dasharray: 3 2;
+}
+
+// Line-draw paths (boundary, rivers, lines)
+.map__draw {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map__boundary {
+  stroke: rgba(212, 149, 106, 0.3);
+  stroke-width: 1;
+}
+
+.map__coastline {
+  stroke: rgba(212, 149, 106, 0.25);
+  stroke-width: 0.8;
+}
+
+.map__river {
+  stroke: rgba(212, 149, 106, 0.15);
+  stroke-width: 1.2;
+
+  &--minor {
+    stroke-width: 0.7;
+    stroke: rgba(212, 149, 106, 0.1);
+  }
+}
+
+// Road network
+.map__road {
+  fill: none;
+  stroke: rgba(236, 234, 229, 0.055);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+}
+
+// Ward internal boundaries
+.map__ward {
+  fill: none;
+  stroke: rgba(236, 234, 229, 0.035);
+  stroke-width: 0.4;
+  stroke-dasharray: 6 4;
+}
+
+.map__yamanote {
+  stroke: var(--color-accent);
+  stroke-width: 1.2;
+  opacity: 0.5;
+}
+
+.map__line--secondary {
+  stroke: rgba(236, 234, 229, 0.06);
+  stroke-width: 0.5;
+  stroke-dasharray: 4 3;
+}
+
+// Station ticks along Yamanote
+.map__stations circle {
+  fill: rgba(236, 234, 229, 0.25);
+}
+
+// ─── District dots ──────────────────────────────────────
+
+.map__dot-core {
+  fill: rgba(236, 234, 229, 0.62);
+
+  &--accent {
+    fill: var(--color-accent);
+  }
+
+  &--bright {
+    fill: #fff;
+  }
+}
+
+.map__pulse-ring {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1;
+  animation: map-pulse 2.6s ease-out infinite;
+
+  &--delay {
+    animation-delay: -1.3s;
+  }
+}
+
+// ─── Labels ────────────────────────────────────────────
+
+.map__label-line {
+  stroke: rgba(236, 234, 229, 0.12);
+  stroke-width: 0.5;
+
+  &--accent {
+    stroke: rgba(212, 149, 106, 0.35);
+  }
+}
+
+.map__label {
+  font-family: var(--font-ui);
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  // ≥ 4.5:1 vs #06080d (WCAG AA)
+  fill: rgba(236, 234, 229, 0.58);
+
+  &--featured {
+    fill: var(--color-accent);
+    font-size: 9px;
+    letter-spacing: 0.24em;
+  }
+}
+
+.map__label-kanji {
+  font-family: var(--font-display);
+  font-size: 7px;
+  // ≥ 3:1 vs #06080d (WCAG non-text)
+  fill: rgba(212, 149, 106, 0.4);
+
+  &--featured {
+    fill: rgba(212, 149, 106, 0.75);
+    font-size: 8px;
+  }
+}
+
+// ─── Compass & scale ───────────────────────────────────
+
+.map__compass-arm {
+  stroke: rgba(236, 234, 229, 0.25);
+  stroke-width: 0.8;
+}
+
+.map__compass-arrow {
+  fill: rgba(236, 234, 229, 0.35);
+}
+
+.map__compass-n {
+  font-family: var(--font-ui);
+  font-size: 7px;
+  letter-spacing: 0.15em;
+  fill: rgba(236, 234, 229, 0.4);
+}
+
+.map__scale-bar {
+  stroke: rgba(236, 234, 229, 0.2);
+  stroke-width: 0.8;
+}
+
+.map__scale-tick {
+  stroke: rgba(236, 234, 229, 0.2);
+  stroke-width: 0.8;
+}
+
+.map__scale-text {
+  font-family: var(--font-ui);
+  font-size: 6px;
+  letter-spacing: 0.12em;
+  fill: rgba(236, 234, 229, 0.3);
+}
+
+// ─── Legend ────────────────────────────────────────────
+
+.map-spread__legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px clamp(16px, 3.5vw, 44px);
+  max-width: 1100px;
+  margin: clamp(20px, 3vw, 40px) auto 0;
+  padding-top: 20px;
+  border-top: 0.5px solid var(--color-faint);
+
+  &-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &--right {
+      margin-left: auto;
+    }
+  }
+
+  &-pulse {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  &-ring {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--color-accent);
+    border-radius: 50%;
+    animation: legend-pulse 2.4s ease-out infinite;
+  }
+
+  &-yamanote {
+    width: 20px;
+    height: 0;
+    border-top: 1.5px solid var(--color-accent);
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  &-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(236, 234, 229, 0.4);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+
+    &--accent {
+      background: var(--color-accent);
+    }
+  }
+
+  &-text {
+    font-family: var(--font-ui);
+    font-size: clamp(9px, 0.9vw, 11px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    white-space: nowrap;
+
+    &--coords {
+      color: rgba(236, 234, 229, 0.4);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: none;
+    }
+  }
+}
+
+// ─── Mobile ────────────────────────────────────────────
+
+@media (max-width: 600px) {
+  .map__label-group:not(.map__label-group--featured) {
+    display: none;
+  }
+}

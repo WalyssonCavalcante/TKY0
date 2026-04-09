@@ -1,0 +1,41 @@
+<section class="alleys" id="alleys" #sectionEl>
+  <header class="alleys__header">
+    <div>
+      <p class="label">見え隠れ</p>
+      <h2 class="alleys__title">Becos<br />escondidos</h2>
+    </div>
+    <p class="alleys__hint">Passe o mouse para revelar</p>
+  </header>
+
+  <div class="alleys__grid">
+    @for (alley of alleys; track alley.num) {
+      <article
+        class="alley-card"
+        [attr.data-num]="alley.num"
+        #cardEl
+        [attr.aria-label]="alley.name + ' — ' + alley.description"
+      >
+        <div class="alley-card__media">
+          <img
+            [ngSrc]="alley.img"
+            [alt]="alley.name"
+            fill
+            [sizes]="alley.sizes"
+            class="alley-card__img"
+            style="object-fit: cover; object-position: center center;"
+          />
+        </div>
+
+        <div class="alley-card__content">
+          <span class="alley-card__num">{{ alley.num }}</span>
+          <div class="alley-card__info">
+            <p class="alley-card__district">{{ alley.district }}</p>
+            <h3 class="alley-card__name">{{ alley.name }}</h3>
+            <p class="alley-card__jp">{{ alley.nameJp }}</p>
+            <p class="alley-card__desc">{{ alley.description }}</p>
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+</section>

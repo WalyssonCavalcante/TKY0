@@ -12,6 +12,8 @@ import { HeroComponent } from './sections/hero/hero.component';
 import { ManifestoComponent } from './sections/manifesto/manifesto.component';
 import { StoriesGridComponent } from './sections/stories-grid/stories-grid.component';
 import { DistrictsComponent } from './sections/districts/districts.component';
+import { MapSpreadComponent } from './sections/map-spread/map-spread.component';
+import { HiddenAlleysComponent } from './sections/hidden-alleys/hidden-alleys.component';
 import { StatsComponent } from './sections/stats/stats.component';
 import { SoundOfTokyoComponent } from './sections/sound-of-tokyo/sound-of-tokyo.component';
 import { FooterComponent } from './sections/footer/footer.component';
@@ -29,6 +31,8 @@ import { ScrollProgressComponent } from './shared/components/scroll-progress/scr
     StoriesGridComponent,
     SoundOfTokyoComponent,
     DistrictsComponent,
+    MapSpreadComponent,
+    HiddenAlleysComponent,
     StatsComponent,
     FooterComponent,
     NoiseOverlayComponent,
