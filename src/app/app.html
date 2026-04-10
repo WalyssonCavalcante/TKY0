@@ -42,6 +42,12 @@
   }
 
   @defer (on viewport; prefetch on idle) {
+    <app-fujisan />
+  } @placeholder {
+    <div style="min-height: 100vh;"></div>
+  }
+
+  @defer (on viewport; prefetch on idle) {
     <app-hidden-alleys />
   } @placeholder {
     <div style="min-height: 80vh;"></div>
